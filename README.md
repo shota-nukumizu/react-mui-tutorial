@@ -1,70 +1,93 @@
-# Getting Started with Create React App
+# react-mui-tutorial
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+本プロジェクトは、ReactとJavaScript、MUIを用いて簡単なSNSのいいねボタンを表示するアプリケーションである。
 
-## Available Scripts
+# 開発手順
 
-In the project directory, you can run:
+予めNode.jsをインストールしていることを前提に解説する。
 
-### `npm start`
+## (1) Reactアプリケーションの作成
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+以下のコマンドを入力してReactアプリケーションを新しく作る。
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npx create-react-app sns-like-button
+```
 
-### `npm test`
+インストールが終了したら、以下のコマンドを入力して該当のフォルダに移動する。
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+cd sns-like-button
+```
 
-### `npm run build`
+## (2) 必要なパッケージのインストール
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+以下のコマンドを入力する。
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## (3) いいねボタンの作成
 
-### `npm run eject`
+`src/LikeButton.js`を新規で作成して、以下のように書く。
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```js
+// (1) 必要なパッケージのインストール
+import React, { useState } from 'react';
+import { IconButton, Typography } from '@mui/material';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+// (2) いいねボタンをuseStateを用いて作る
+const LikeButton = () => {
+  const [liked, setLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  // (3) いいねボタンの数を表示する
+  const toggleLike = () => {
+    setLiked(!liked);
+    setLikesCount(liked ? likesCount - 1 : likesCount + 1);
+  };
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  // (4) いいねボタンが表示される
+  return (
+    <div>
+      <IconButton onClick={toggleLike} color={liked ? 'primary' : 'default'}>
+        <FavoriteIcon />
+      </IconButton>
+      <Typography component="span">{likesCount}</Typography>
+    </div>
+  );
+};
 
-## Learn More
+export default LikeButton;
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## (4) `src/App.js`の修正
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+`src/App.js`を以下のように修正し、いいねボタンだけが表示されるように書き換える。
 
-### Code Splitting
+```js
+import React from 'react';
+import LikeButton from './LikeButton';
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+function App() {
+  return (
+    <div className="App">
+      <LikeButton />
+    </div>
+  );
+}
 
-### Analyzing the Bundle Size
+export default App;
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## (5) 開発用サーバの立ち上げ
 
-### Making a Progressive Web App
+以下のコマンドを入力すると、いいねボタンが表示される。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+npm start
+```
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![いいねボタンの画像](likebutton.png)
